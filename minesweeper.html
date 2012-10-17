@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Minesweepers</title>
+<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+<script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+<script src="http://backbonejs.org/backbone-min.js"></script>
+<script src="minesweeper.js"></script>
+<link rel="stylesheet" type="text/css" href="minesweeper.css">
+<script type="text/template" id="tile-template">
+<% if (revealed && value) { return value } %>
+<% if (mined) { return "m" } %>
+</script>
+
+<script type="text/template" id="status-template">
+Revealed: <%= revealed %>
+Remaining: <%= remaining %>
+Flagged: <%= flagged %>
+</script>
+</head>
+<body>
+<h1>Minesweepers</h1>
+<div id="game">
+	<div id="controls"><button id="validate">Validate</button></div>
+    <table id="grid"></table>
+    <div id="status"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+table#grid tr td {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border: 1px solid #000000;
+    background: #DDDDDD;
+    box-shadow: inset -3px -3px 3px #555;
+}
+
+table#grid tr td:hover {
+    background: #EEEEEE;
+}
+
+table#grid tr td.flagged {
+    background: #AA3333;
+}
+
+table#grid tr td.revealed {
+    box-shadow: none;
+    background: #CCCCCC;
+}
