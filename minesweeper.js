@@ -8,6 +8,7 @@ var Tile = Backbone.Model.extend({
         flagged: false,
         revealed: false,
         value: 0,
+        //neighbors: [],
     },
     
     inc: function() {
@@ -19,7 +20,23 @@ var Tile = Backbone.Model.extend({
     },
 
     reveal: function() {
-        this.set({revealed: true, flagged: false});
+        if (this.get('revealed') || this.get('flagged')) {
+            return;
+        } else if (this.get('mined')) {
+            return this.get('mined'); // FIXME: implement game over
+        }
+        
+        this.set({revealed: true});
+        
+        if (!this.get('value')) { // if this.value == 0
+            // reveal all the tiles around it as well
+            _.each(this.get('neighbors'), function(tile) {
+                if (!tile.get('revealed') && !tile.get('mined')) {
+                    tile.reveal();
+                }
+            });
+        }
+        
         return this.get('mined');
     },
 });
@@ -32,15 +49,32 @@ var Grid = Backbone.Collection.extend({
         this.y = 8;
         this.mines = 10;
         
+        // initialize the tiles
         var tiles = [];
-        for (var row = 0; row < this.y; row++) {
+        for (var y = 0; y < this.y; y++) {
             var tileRow = [];
-            for (var col = 0; col < this.x; col++) {
-                tileRow.push(new Tile({x: col, y: row}));
+            for (var x = 0; x < this.x; x++) {
+                tileRow.push(new Tile({x: x, y: y}));
             }
             tiles.push(tileRow);
         }
         
+        // compute tiles.neighbors
+        for (var y = 0; y < this.y; y++) {
+            for (var x = 0; x < this.x; x++) {
+                var neighbors = [];
+                for (var dy = -1; dy <= 1; dy++) {
+                    for (var dx = -1; dx <= 1; dx++) {
+                        if (tiles[x+dx] && tiles[x+dx][y+dy]) {
+                            neighbors.push(tiles[x+dx][y+dy]);
+                        }
+                    }
+                }
+                tiles[x][y].set({neighbors: neighbors});
+            }
+        }
+        
+        // plant mines
         var mines = this.mines;
         while (mines) {
             var x = Math.floor(this.x * Math.random());
@@ -48,13 +82,7 @@ var Grid = Backbone.Collection.extend({
             
             if (!tiles[x][y].get('mined')) {
                 tiles[x][y].set({mined: true});
-                for (var dy = -1; dy <= 1; dy++) {
-                    for (var dx = -1; dx <= 1; dx++) {
-                        if (tiles[x+dx] && tiles[x+dx][y+dy]) {
-                            tiles[x+dx][y+dy].inc();
-                        }
-                    }
-                }
+                _.each(tiles[x][y].get('neighbors'), function(tile) { tile.inc() });
                 mines--;
             }
         }

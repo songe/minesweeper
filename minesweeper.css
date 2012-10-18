@@ -12,6 +12,7 @@ table#grid tr td:hover {
 }
 
 table#grid tr td.flagged {
+    /* FIXME: add flag */
     background: #AA3333;
 }
 
