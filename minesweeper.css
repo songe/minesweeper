@@ -1,3 +1,20 @@
+body {
+    font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif
+}
+
+a {
+    color: #888888;
+}
+
+div, table { /* center by default */
+    text-align: center;
+    margin: auto;
+}
+
+h1#title {
+    text-align: center;
+}
+
 table#grid tr td {
     width: 50px;
     height: 50px;
@@ -12,12 +29,22 @@ table#grid tr td:hover {
 }
 
 table#grid tr td.flagged {
-    background-image: url("flag.png");
-    background-position: center center;
+    background-image: url("flag.png") ;
+    background-repeat: no-repeat;
+    background-position: left top;
     background-size: 100% 100%;
 }
 
 table#grid tr td.revealed {
     box-shadow: none;
     background: #CCCCCC;
+}
+
+#status {
+    text-align: center;
+}
+
+#credits {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }

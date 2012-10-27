@@ -181,6 +181,7 @@ var GameView = Backbone.View.extend({
 
     events: {
         'click #validate': 'validate',
+        'click #new': 'new_game',
     },
 
     initialize: function() {
@@ -204,12 +205,18 @@ var GameView = Backbone.View.extend({
         var revealed = Tiles.revealed().length;
         var remaining = Tiles.remaining().length;
         var flagged = Tiles.flagged().length;
+        var mined = Tiles.mines;
 
         this.status.html(this.statusTemplate({
             revealed: revealed, 
             remaining: remaining,
             flagged: flagged,
+            mined: mined,
         }));
+    },
+    
+    new_game: function() {
+        Tiles.reset( Tiles.defaults() );
     },
 
     addTile: function(tile) {
