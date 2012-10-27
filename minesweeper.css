@@ -12,8 +12,9 @@ table#grid tr td:hover {
 }
 
 table#grid tr td.flagged {
-    /* FIXME: add flag */
-    background: #AA3333;
+    background-image: url("flag.png");
+    background-position: center center;
+    background-size: 100% 100%;
 }
 
 table#grid tr td.revealed {

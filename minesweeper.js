@@ -2,8 +2,7 @@ $(function(){
 
 var Tile = Backbone.Model.extend({
     defaults: {
-        x: null,
-        y: null,
+        // x, y, neighbors[] initialized by Grid
         mined: false,
         flagged: false,
         revealed: false,
@@ -15,7 +14,7 @@ var Tile = Backbone.Model.extend({
     },
 
     toggle: function() {
-        if (!this.get('revealed')) { this.set({flagged: !this.get('flagged')}) };
+        if (!this.get('revealed')) { this.set({flagged: !this.get('flagged')}); }
     },
 
     reveal: function() {
@@ -35,6 +34,8 @@ var Tile = Backbone.Model.extend({
                 }
             });
         }
+        
+        if (Tiles.remaining().length == Tiles.mined().length) { Tiles.validate(); }
     },
 });
 
@@ -123,9 +124,12 @@ var Grid = Backbone.Collection.extend({
     
     validate: function() {
         var flagged = this.flagged();
+        var remaining = this.remaining();
         var mined = this.mined();
         (flagged.length == mined.length) && 
-            (flagged.every(function(f,i){return f == mined[i]})) ?
+            (flagged.every(function(f,i){return f == mined[i]})) ||
+        (remaining.length == mined.length) &&
+            (remaining.every(function(f,i){return f == mined[i]})) ?
             alert ('You win!') : alert('You lose!');
         this.reset( this.defaults() );
     },
@@ -141,8 +145,8 @@ var TileView = Backbone.View.extend({
     template: _.template($('#tile-template').html()),
     
     events: {
-        'click': 'toggle',
-        'dblclick': 'reveal',
+        'click': 'reveal',
+        'contextmenu': 'toggle',
     },
 
     initialize: function() {
@@ -162,6 +166,7 @@ var TileView = Backbone.View.extend({
     
     toggle: function() {
         this.model.toggle();
+        return false; // prevents contextmenu
     },
 
     clear: function() {
@@ -229,7 +234,6 @@ var GameView = Backbone.View.extend({
     
     validate: function() {
         Tiles.validate();
-        this.reset();
     },
 });
 
