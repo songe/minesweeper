@@ -28,13 +28,24 @@ table#grid tr td:hover {
     background: #EEEEEE;
 }
 
-table#grid tr td.flagged {
-    background-image: url("flag.png") ;
+table#grid tr td.mined, table#grid tr td.revealed.mined {
+    background-image: url("bomb.png");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 100% 100%;
 }
 
+table#grid tr td.flagged {
+    background-image: url("flag.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 100% 100%;
+}
+
+table#grid tr td.mined.flagged {
+    background-image: url("flag.png"), url("bomb.png");
+}
+    
 table#grid tr td.revealed {
     box-shadow: none;
     background: #CCCCCC;

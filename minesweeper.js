@@ -7,6 +7,7 @@ var Tile = Backbone.Model.extend({
         flagged: false,
         revealed: false,
         value: 0,
+        cheat: false,
     },
     
     inc: function() {
@@ -20,11 +21,13 @@ var Tile = Backbone.Model.extend({
     reveal: function() {
         if (this.get('revealed') || this.get('flagged')) {
             return;
-        } else if (this.get('mined')) {
-            return Tiles.validate();
         }
         
         this.set({revealed: true});
+        
+        if (this.get('mined')) {
+            return Tiles.validate();
+        }
     
         if (!this.get('value')) { // if this.value == 0
             // reveal all the tiles around it as well
@@ -46,6 +49,8 @@ var Grid = Backbone.Collection.extend({
         this.x = 8;
         this.y = 8;
         this.mines = 10;
+        this.cheated = false;
+        this.gameover = false;
         
         // initialize the tiles
         var tiles = [];
@@ -123,15 +128,37 @@ var Grid = Backbone.Collection.extend({
     },
     
     validate: function() {
+        if (this.gameover) { return; }
+        
         var flagged = this.flagged();
         var remaining = this.remaining();
         var mined = this.mined();
-        (flagged.length == mined.length) && 
+        
+        this.revealMines();
+        
+        if (
+            (flagged.length == mined.length) && 
             (flagged.every(function(f,i){return f == mined[i]})) ||
-        (remaining.length == mined.length) &&
-            (remaining.every(function(f,i){return f == mined[i]})) ?
-            alert ('You win!') : alert('You lose!');
-        this.reset( this.defaults() );
+            (remaining.length == mined.length) &&
+            (remaining.every(function(f,i){return f == mined[i]}))
+        ) {
+            !this.cheated ? 
+                alert('You win!') : 
+                alert('You win! ...but you cheated. \u0CA0_\u0CA0');
+        } else {
+            alert('You lose!');
+        }
+        
+        this.gameover = true;
+    },
+    
+    revealMines: function() {
+        $.each(this.mined(), function(){this.set({revealed: true})});
+    },
+    
+    cheat: function() {
+        this.each(function(tile){tile.set({cheat: true})});
+        this.cheated = true;
     },
 });
 
@@ -157,6 +184,9 @@ var TileView = Backbone.View.extend({
         this.$el.html(this.template(this.model.toJSON()));
         this.$el.toggleClass('flagged', this.model.get('flagged'));
         this.$el.toggleClass('revealed', this.model.get('revealed'));
+        this.$el.toggleClass('mined', 
+            (this.model.get('cheat') || this.model.get('revealed')) &&
+            this.model.get('mined'));
         return this;
     },
 
@@ -182,6 +212,7 @@ var GameView = Backbone.View.extend({
     events: {
         'click #validate': 'validate',
         'click #new': 'new_game',
+        'click #cheat': 'cheat',
     },
 
     initialize: function() {
@@ -241,6 +272,10 @@ var GameView = Backbone.View.extend({
     
     validate: function() {
         Tiles.validate();
+    },
+    
+    cheat: function() {
+        Tiles.cheat();
     },
 });
 

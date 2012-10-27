@@ -8,7 +8,7 @@
 <script src="minesweeper.js"></script>
 <link rel="stylesheet" type="text/css" href="minesweeper.css">
 <script type="text/template" id="tile-template">
-<% if (revealed && value) { return value } %>
+<% if (revealed && !mined && value) { return value } %>
 </script>
 
 <script type="text/template" id="status-template">
@@ -25,6 +25,7 @@ Flagged: <%= flagged %>
 	<div id="controls">
 		<button id="new">New Game</button>
 		<button id="validate">Validate</button>
+		<button id="cheat">Cheat</button>
 	</div>
     <table id="grid"></table>
     <div id="status"></div>
