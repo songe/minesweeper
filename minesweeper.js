@@ -8,7 +8,6 @@ var Tile = Backbone.Model.extend({
         flagged: false,
         revealed: false,
         value: 0,
-        //neighbors: [],
     },
     
     inc: function() {
@@ -23,11 +22,11 @@ var Tile = Backbone.Model.extend({
         if (this.get('revealed') || this.get('flagged')) {
             return;
         } else if (this.get('mined')) {
-            return this.get('mined'); // FIXME: implement game over
+            return Tiles.validate();
         }
         
         this.set({revealed: true});
-        
+    
         if (!this.get('value')) { // if this.value == 0
             // reveal all the tiles around it as well
             _.each(this.get('neighbors'), function(tile) {
@@ -36,8 +35,6 @@ var Tile = Backbone.Model.extend({
                 }
             });
         }
-        
-        return this.get('mined');
     },
 });
 
@@ -59,7 +56,7 @@ var Grid = Backbone.Collection.extend({
             tiles.push(tileRow);
         }
         
-        // compute tiles.neighbors
+        // set tiles.neighbors
         for (var y = 0; y < this.y; y++) {
             for (var x = 0; x < this.x; x++) {
                 var neighbors = [];
@@ -127,6 +124,10 @@ var Grid = Backbone.Collection.extend({
     validate: function() {
         var flagged = this.flagged();
         var mined = this.mined();
+        (flagged.length == mined.length) && 
+            (flagged.every(function(f,i){return f == mined[i]})) ?
+            alert ('You win!') : alert('You lose!');
+        this.reset( this.defaults() );
     },
 });
 
@@ -179,10 +180,17 @@ var GameView = Backbone.View.extend({
 
     initialize: function() {
         Tiles.bind('all', this.render, this);
+        Tiles.bind('reset', this.reset, this);
         
         this.grid = $('#grid');
         this.status = $('#status');
         
+        this.addAll();
+        this.render();
+    },
+    
+    reset: function() {
+        this.removeAll();
         this.addAll();
         this.render();
     },
@@ -215,8 +223,13 @@ var GameView = Backbone.View.extend({
         }
     },
     
+    removeAll: function() {
+        this.$('#grid tr').remove();
+    },
+    
     validate: function() {
         Tiles.validate();
+        this.reset();
     },
 });
 
