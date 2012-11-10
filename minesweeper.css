@@ -20,35 +20,33 @@ table#grid tr td {
     height: 50px;
     text-align: center;
     border: 1px solid #000000;
-    background: #DDDDDD;
     box-shadow: inset -3px -3px 3px #555;
+    background-color: #DDDDDD;
+    background-image: url("flag.png"), url("bomb.png");
+    background-size: 100% 100%, 100% 100%;
+    background-position: -999px -999px, -999px -999px;
+    background-repeat: no-repeat;
 }
 
 table#grid tr td:hover {
-    background: #EEEEEE;
+    background-color: #EEEEEE;
 }
 
-table#grid tr td.mined, table#grid tr td.revealed.mined {
-    background-image: url("bomb.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    background-size: 100% 100%;
+table#grid tr td.mined {
+    background-position: -999px -999px, left top;
 }
 
 table#grid tr td.flagged {
-    background-image: url("flag.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    background-size: 100% 100%;
+    background-position: left top, -999px -999px;
 }
 
 table#grid tr td.mined.flagged {
-    background-image: url("flag.png"), url("bomb.png");
+    background-position: left top, left top;
 }
     
 table#grid tr td.revealed {
     box-shadow: none;
-    background: #CCCCCC;
+    background-color: #CCCCCC;
 }
 
 #status {
