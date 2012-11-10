@@ -127,14 +127,12 @@ var Grid = Backbone.Collection.extend({
         return this.filter(function(tile) { return tile.get('y') == row; });
     },
     
-    validate: function() {
+    validate: function(clicked) {
         if (this.gameover) { return; }
         
         var flagged = this.flagged();
         var remaining = this.remaining();
         var mined = this.mined();
-        
-        this.revealMines();
         
         if (
             (flagged.length == mined.length) && 
@@ -143,12 +141,16 @@ var Grid = Backbone.Collection.extend({
             (remaining.every(function(f,i){return f == mined[i]}))
         ) {
             !this.cheated ? 
-                alert('You win!') : 
-                alert('You win! ...but you cheated. \u0CA0_\u0CA0');
+                notify('You win!') : 
+                notify('You win! ...but you cheated. \u0CA0_\u0CA0');
+        } else if(!clicked && this.revealed().length == 1) { // unlucky first step
+            alert('Tough luck!');
+            return Game.new_game();
         } else {
-            alert('You lose!');
+            notify('You lose!');
         }
         
+        this.revealMines();
         this.gameover = true;
     },
     
@@ -161,6 +163,12 @@ var Grid = Backbone.Collection.extend({
         this.cheated = true;
     },
 });
+
+function notify(message) {
+    /* "forks thread" to "support concurrency" so the next execution 
+    doesn't have to wait on the user clearing the alert message */
+    setTimeout(function(){ alert(message) }, 0);
+}
 
 var Tiles = new Grid;
 
@@ -271,7 +279,7 @@ var GameView = Backbone.View.extend({
     },
     
     validate: function() {
-        Tiles.validate();
+        Tiles.validate(true);
     },
     
     cheat: function() {
