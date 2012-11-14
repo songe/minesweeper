@@ -2,11 +2,13 @@
 
 <head>
 <title>Minesweeper</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
 <script src="http://backbonejs.org/backbone-min.js"></script>
 <script src="minesweeper.js"></script>
-<link rel="stylesheet" type="text/css" href="minesweeper.css">
+<link rel="stylesheet" type="text/css" href="minesweeper.css" />
+<link rel="stylesheet" type="text/css" href="mobile.css" media="handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px)" />
 <script type="text/template" id="tile-template">
 <% if (revealed && !mined && value) { return value } %>
 </script>

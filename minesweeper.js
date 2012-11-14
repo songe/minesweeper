@@ -182,6 +182,7 @@ var TileView = Backbone.View.extend({
     events: {
         'click': 'reveal',
         'contextmenu': 'toggle',
+        'taphold': 'toggle' // for mobile devices
     },
 
     initialize: function() {
@@ -220,7 +221,7 @@ var GameView = Backbone.View.extend({
     events: {
         'click #validate': 'validate',
         'click #new': 'new_game',
-        'click #cheat': 'cheat',
+        'click #cheat': 'cheat'
     },
 
     initialize: function() {

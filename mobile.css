@@ -1,0 +1,15 @@
+* { float: none; }
+
+html, body {
+    width: 100%;
+    margin: 0;
+}
+
+#status {
+    font-size: 12px;
+}
+
+/* iPhone-specific styles */
+@media only screen and (max-device-width: 480px) {
+html { -webkit-text-size-adjust: none; }
+}

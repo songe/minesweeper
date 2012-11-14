@@ -13,19 +13,63 @@ div, table { /* center by default */
 
 h1#title {
     text-align: center;
+    margin: .5em 0;
+}
+
+div#controls {
+    margin: .5em 0;
+}
+
+button {
+    padding: .5em 1.5em;
+    font-weight: bold;
+    
+    -wekit-border-radius: 1em;
+    -moz-border-radius: 1em;
+    border-radius: 1em;
+    border: 1px solid #ccc;
+    
+    background-color: #eee;
+    background-repeat: repeat-x;
+    background-image: -khtml-gradient(linear, left top, left bottom, from(#fff), to(#f1f1f1));
+    background-image: -moz-linear-gradient(top, #fff, #f1f1f1);
+    background-image: -ms-linear-gradient(top, #fff, #f1f1f1);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #f1f1f1));
+    background-image: -webkit-linear-gradient(top, #fff, #f1f1f1);
+    background-image: -o-linear-gradient(top, #fff, #f1f1f1);
+    background-image: linear-gradient(top, #fff, #f1f1f1);
+    
+    -moz-box-shadow: 0px 1px 4px rgba(0, 0, 0, .3);
+    -webkit-box-shadow: 0px 1px 4px rgba(0, 0, 0, .3);
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, .3);
+}
+
+button:hover {
+    background-position: 0 -15px;
+}
+
+button:active {
+    background-position: 0 -50px;
+}
+
+table#grid {
+    border-collapse: collapse;
 }
 
 table#grid tr td {
     width: 50px;
     height: 50px;
     text-align: center;
-    border: 1px solid #000000;
+    padding: 0;
+    outline: 1px ridge #555;
+    border: 0 none;
     box-shadow: inset -3px -3px 3px #555;
     background-color: #DDDDDD;
     background-image: url("flag.png"), url("bomb.png");
     background-size: 100% 100%, 100% 100%;
     background-position: -999px -999px, -999px -999px;
     background-repeat: no-repeat;
+    overflow: hidden;
 }
 
 table#grid tr td:hover {
