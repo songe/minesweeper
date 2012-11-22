@@ -65,9 +65,9 @@ table#grid tr td {
     border: 0 none;
     box-shadow: inset -3px -3px 3px #555;
     background-color: #DDDDDD;
-    background-image: url("flag.png"), url("bomb.png");
-    background-size: 100% 100%, 100% 100%;
-    background-position: -999px -999px, -999px -999px;
+    background-image: url("img/flag.png"), url("img/question_mark.png"), url("img/bomb.png");
+    background-size: 100% 100%, 100% 100%, 100% 100%;
+    background-position: -999px -999px, -999px -999px, -999px -999px;
     background-repeat: no-repeat;
     overflow: hidden;
 }
@@ -77,15 +77,23 @@ table#grid tr td:hover {
 }
 
 table#grid tr td.mined {
-    background-position: -999px -999px, left top;
+    background-position: -999px -999px, -999px -999px, left top;
 }
 
 table#grid tr td.flagged {
-    background-position: left top, -999px -999px;
+    background-position: left top, -999px -999px, -999px -999px;
+}
+
+table#grid tr td.marked {
+    background-position: -999px -999px, left top, -999px -999px;
 }
 
 table#grid tr td.mined.flagged {
-    background-position: left top, left top;
+    background-position: left top, -999px -999px, left top;
+}
+
+table#grid tr td.mined.marked {
+    background-position: -999px -999px, left top, left top;
 }
     
 table#grid tr td.revealed {

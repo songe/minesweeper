@@ -1,10 +1,13 @@
 $(function(){
 
+const FLAGGED = 1;
+const MAYBE = 2;
+
 var Tile = Backbone.Model.extend({
     defaults: {
         // x, y, neighbors[] initialized by Grid
         mined: false,
-        flagged: false,
+        marked: 0, // 0: none, 1: flagged, 2: maybe (question mark)
         revealed: false,
         value: 0,
         cheat: false,
@@ -15,15 +18,15 @@ var Tile = Backbone.Model.extend({
     },
 
     toggle: function() {
-        if (!this.get('revealed')) { this.set({flagged: !this.get('flagged')}); }
+        if (!this.get('revealed')) {
+            this.set({marked: (this.get('marked') + 1) % 3});
+        }
     },
 
     reveal: function() {
-        if (this.get('revealed') || this.get('flagged')) {
-            return;
-        }
+        if (this.get('revealed') || this.get('marked') == FLAGGED) { return; }
         
-        this.set({revealed: true});
+        this.set({revealed: true, marked: 0});
         
         if (this.get('mined')) {
             return Tiles.validate();
@@ -112,7 +115,7 @@ var Grid = Backbone.Collection.extend({
     },
 
     flagged: function() {
-        return this.filter(function(tile) { return tile.get('flagged') });
+        return this.filter(function(tile) { return tile.get('marked') == FLAGGED });
     },
     
     mined: function() {
@@ -191,7 +194,8 @@ var TileView = Backbone.View.extend({
 
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
-        this.$el.toggleClass('flagged', this.model.get('flagged'));
+        this.$el.toggleClass('flagged', this.model.get('marked') == FLAGGED);
+        this.$el.toggleClass('marked', this.model.get('marked') == MAYBE);
         this.$el.toggleClass('revealed', this.model.get('revealed'));
         this.$el.toggleClass('mined', 
             (this.model.get('cheat') || this.model.get('revealed')) &&
